@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Navbar from '../components/layout/Navbar';
+import '@/app/globals.css' 
 
 const queryClient = new QueryClient();
 
