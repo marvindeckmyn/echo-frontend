@@ -1,4 +1,6 @@
 {
     "css.validate": false,
-    "tailwindCSS.enable": true
+    "tailwindCSS.enable": true,
+    "javascript.preferences.quoteStyle": "double",
+    "typescript.preferences.quoteStyle": "double"
 }
