@@ -41,7 +41,7 @@ export async function POST(request: Request) {
             data: {
                 email,
                 username,
-                name: name || username, // Use usernamem as name if no name provided
+                name: name || username, // Use username as name if no name provided
                 password: hashesdPassword,
             },
         });
