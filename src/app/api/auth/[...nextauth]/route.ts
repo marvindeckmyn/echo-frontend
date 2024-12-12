@@ -49,6 +49,19 @@ export const authOptions: NextAuthOptions = {
             }
         })
     ],
+    callbacks: {
+        session: async({ session, token }) => {
+            if (session?.user) {
+                const dbUser = await prisma.user.findUnique({
+                    where: { email: session.user.email! }
+                });
+                if (dbUser) {
+                    session.user.username = dbUser.username;
+                }
+            }
+            return session;
+        }
+    },
     pages: {
         signIn: '/auth/signin',
     },
