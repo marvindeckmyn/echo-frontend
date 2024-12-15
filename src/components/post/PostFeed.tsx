@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import PostCard from "./PostCard";
 import { Loader2 } from 'lucide-react';
