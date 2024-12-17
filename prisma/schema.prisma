@@ -20,6 +20,7 @@ model User {
     post            Post[]
     likes           Like[]
     bookmarks       Bookmark[]
+    comments        Comment[]
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 
@@ -68,6 +69,7 @@ model Post {
     author          User        @relation(fields: [authorId], references: [id])
     likes           Like[]
     bookmarks       Bookmark[]
+    comments        Comment[]
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 }
@@ -92,4 +94,24 @@ model Bookmark {
     user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([postId, userId])
+}
+
+model Comment {
+    id              String      @id @default(cuid())
+    content         String
+    postId          String
+    userId          String
+    parentId        String?     // For nested replies
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    // Relations
+    post            Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parent          Comment?    @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    replies         Comment[]   @relation("CommentReplies")
+
+    @@index([postId])
+    @@index([userId])
+    @@index([parentId])
 }
