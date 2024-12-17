@@ -37,32 +37,58 @@ export default function PostCard({
     const [likeCount, setLikeCount] = useState(initialLikeCount);
     const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
     const [bookmarkCount, setBookmarkCount] = useState(initialBookmarkCount);
+    const [isLikeLoading, setIsLikeLoading] = useState(false);
+    const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
 
     const handleLike = async () => {
-        if (!session) return;
+        if (!session || isLikeLoading) {
+            //  Toast notification later, now console log
+            console.log('Please log in to like posts');
+            return;
+        }
+        setIsLikeLoading(true);
+
         try {
             const response = await fetch(`/api/posts/${id}/like`, {
                 method: 'POST',
+                credentials: 'include',
             });
+            if (!response.ok) {
+                throw new Error('Failed to like post');
+            }
             const data = await response.json();
             setIsLiked(data.liked);
             setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
         } catch (error) {
             console.error('Error liking post:', error);
+        } finally {
+            setIsLikeLoading(false);
         }
     };
 
     const handleBookmark = async () => {
-        if (!session) return;
+        if (!session || isBookmarkLoading) {
+            // Toast notification later, now console log
+            console.log('Please log in to bookmark posts');
+            return;
+        }
+        setIsBookmarkLoading(true);
+
         try {
             const response = await fetch(`/api/posts/${id}/bookmark`, {
                 method: 'POST',
+                credentials: 'include',
             });
+            if (!response.ok) {
+                throw new Error('Failed to bookmark post');
+            }
             const data = await response.json();
             setIsBookmarked(data.bookmarked);
             setBookmarkCount(prev => data.bookmarked ? prev + 1 : prev - 1);
         } catch (error) {
             console.error('Error bookmarking post:', error);
+        } finally {
+            setIsBookmarkLoading(false);
         }
     };
 
