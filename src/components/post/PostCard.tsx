@@ -93,7 +93,7 @@ export default function PostCard({
     };
 
     return (
-        <div className="bg-background rounded-lg shadow p-4 hover:bg-gray-50 transition-colors">
+        <div className="bg-background rounded-lg shadow p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <div className="flex space-x-3">
                 <div className="flex-shrink-0">
                     {author.image ? (

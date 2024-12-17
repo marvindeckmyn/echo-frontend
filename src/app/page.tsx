@@ -11,13 +11,13 @@ export default function Home() {
                     <div className="hidden md:block md:col-span-1">
                         <div className="bg-background rounded-lg shadow p-4 sticky top-20">
                             <nav className="space-y-2">
-                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 rounded-md transition-colors">
+                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
                                     Home
                                 </a>
-                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 rounded-md transition-colors">
+                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
                                     Profile
                                 </a>
-                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 rounded-md transition-colors">
+                                <a href="#" className="flex items-center px-4 py-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors">
                                     Bookmarks
                                 </a>
                             </nav>
