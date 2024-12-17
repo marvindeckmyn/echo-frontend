@@ -1,11 +1,11 @@
 export interface User {
     id: string;
-    name: string;
+    name: string | null;
     username: string;
-    email: string;
-    image?: string;
-    bio?: string;
+    email: string | null;
+    image?: string | null;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface Post {
@@ -15,6 +15,47 @@ export interface Post {
     author: User;
     createdAt: Date;
     updatedAt: Date;
-    likes: number;
-    replies: number;
+    likes: Like[];
+    bookmarks: Bookmark[];
+    comments: Comment[];
+    _count?: {
+        likes: number;
+        bookmarks: number;
+        comments: number;
+    }
+}
+
+export interface Like {
+    id: string;
+    postId: string;
+    userId: string;
+    createdAt: Date;
+    post: Post;
+    user: User;
+}
+
+export interface Bookmark {
+    id: string;
+    postId: string;
+    userId: string;
+    createdAt: Date;
+    post: Post;
+    user: User;
+}
+
+export interface Comment {
+    id: string;
+    content: string;
+    postId: string;
+    userId: string;
+    parentId?: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    post: Post;
+    user: User;
+    parent?: Comment | null;
+    replies?: Comment[];
+    _count?: {
+        replies: number;
+    }
 }
