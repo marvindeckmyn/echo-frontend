@@ -2,6 +2,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
+import { Heart, Bookmark, MessageCircle, Repeat2 } from 'lucide-react';
 
 interface Author {
     name: string | null;
@@ -14,10 +16,55 @@ interface PostProps {
     content: string;
     createdAt: string;
     author: Author;
+    initialLikeCount?: number;
+    initialBookmarkCount?: number;
+    initialLiked?: boolean;
+    initialBookmarked?: boolean;
 }
 
-export default function PostCard({ id, content, createdAt, author }: PostProps) {
+export default function PostCard({ 
+    id,
+    content,
+    createdAt,
+    author,
+    initialLikeCount = 0,
+    initialBookmarkCount = 0,
+    initialLiked = false,
+    initialBookmarked = false
+}: PostProps) {
     const { data: session } = useSession();
+    const [isLiked, setIsLiked] = useState(initialLiked);
+    const [likeCount, setLikeCount] = useState(initialLikeCount);
+    const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
+    const [bookmarkCount, setBookmarkCount] = useState(initialBookmarkCount);
+
+    const handleLike = async () => {
+        if (!session) return;
+        try {
+            const response = await fetch(`/api/posts/${id}/like`, {
+                method: 'POST',
+            });
+            const data = await response.json();
+            setIsLiked(data.liked);
+            setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
+        } catch (error) {
+            console.error('Error liking post:', error);
+        }
+    };
+
+    const handleBookmark = async () => {
+        if (!session) return;
+        try {
+            const response = await fetch(`/api/posts/${id}/bookmark`, {
+                method: 'POST',
+            });
+            const data = await response.json();
+            setIsBookmarked(data.bookmarked);
+            setBookmarkCount(prev => data.bookmarked ? prev + 1 : prev - 1);
+        } catch (error) {
+            console.error('Error bookmarking post:', error);
+        }
+    };
 
     return (
         <div className="bg-background rounded-lg shadow p-4 hover:bg-gray-50 transition-colors">
@@ -51,14 +98,31 @@ export default function PostCard({ id, content, createdAt, author }: PostProps) 
                     </div>
                     <p className="mt-1 text-foreground whitespace-pre-wrap">{content}</p>
                     <div className="mt-3 flex items-center space-x-8">
-                    <button className="text-gray-500 hover:text-blue-500 transition-colors">
-                            <span>💬 0</span>
+                    <button className="text-gray-500 hover:text-blue-500 transition-colors flex items-center space-x-2">
+                            <MessageCircle className="w-5 h-5"/>
+                            <span>0</span>
                         </button>
-                        <button className="text-gray-500 hover:text-red-500 transition-colors">
-                            <span>❤️ 0</span>
+                        <button
+                            onClick={handleLike}
+                            className={`flex items-center space-x-2 transition-colors ${
+                                isLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                            }`}
+                        >
+                            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                            <span>{likeCount}</span>
                         </button>
-                        <button className="text-gray-500 hover:text-green-500 transition-colors">
-                            <span>🔄 0</span>
+                        <button className="text-gray-500 hover:text-green-500 transition-colors flex items-center space-x-2">
+                            <Repeat2 className="w-5 h-5" />
+                            <span>0</span>
+                        </button>
+                        <button
+                            onClick={handleBookmark}
+                            className={`flex items-center space-x-2 transition-colors ${
+                                isBookmarked ? 'text-blue-500' : 'text-gray-500 hover:text-blue-500'
+                            }`}
+                        >
+                            <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
+                            <span>{bookmarkCount}</span>
                         </button>
                     </div>
                 </div>
