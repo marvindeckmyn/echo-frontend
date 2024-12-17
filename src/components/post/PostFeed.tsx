@@ -13,6 +13,10 @@ interface Post {
         username: string;
         image: string | null;
     };
+    isLiked: boolean;
+    isBookmarked: boolean;
+    likeCount: number;
+    bookmarkCount: number;
 }
 
 export default function PostFeed() {
@@ -60,6 +64,10 @@ export default function PostFeed() {
                     content={post.content}
                     createdAt={post.createdAt}
                     author={post.author}
+                    initialLikeCount={post.likeCount}
+                    initialBookmarkCount={post.bookmarkCount}
+                    initialLiked={post.isLiked}
+                    initialBookmarked={post.isBookmarked}
                 />
             ))}
         </div>
