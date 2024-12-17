@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +30,7 @@ export async function POST(
             );
         }
 
-        const existingLike = await prisma.like.findUnique({
+        const existingBookmark = await prisma.bookmark.findUnique({
             where: {
                 postId_userId: {
                     postId: params.postId,
@@ -39,29 +39,29 @@ export async function POST(
             }
         });
 
-        if (existingLike) {
-            // Unlike if already liked
-            await prisma.like.delete({
+        if (existingBookmark) {
+            // Remove bookmark if already bookmarked
+            await prisma.bookmark.delete({
                 where: {
-                    id: existingLike.id
+                    id: existingBookmark.id
                 }
             });
-            return NextResponse.json({ liked: false });
+            return NextResponse.json({ bookmarked: false });
         }
 
-        // Create new like
-        await prisma.like.create({
+        // Create new bookmark
+        await prisma.bookmark.create({
             data: {
                 postId: params.postId,
                 userId: user.id,
             }
         });
 
-        return NextResponse.json({ liked: true });
+        return NextResponse.json({ bookmarked: true });
     } catch (error) {
-        console.error("Like error:", error);
+        console.error("Bookmark error:", error);
         return NextResponse.json(
-            { message: "Error processing like" },
+            { message: "Error processing bookmark" },
             { status: 500 }
         );
     }
