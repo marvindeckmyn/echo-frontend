@@ -1,7 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import PostCard from "./PostCard";
+import Link from 'next/link';
+import PostCard from './PostCard';
 import { Loader2 } from 'lucide-react';
 
 interface Post {
@@ -17,11 +18,12 @@ interface Post {
     isBookmarked: boolean;
     likeCount: number;
     bookmarkCount: number;
+    commentCount: number;
 }
 
 export default function PostFeed() {
     const { data: posts, isLoading, error } = useQuery<Post[]>({
-        queryKey: ['posts'],
+        queryKey: ['posts'] as const,
         queryFn: async () => {
             const response = await fetch('/api/posts');
             if (!response.ok) {
@@ -58,17 +60,23 @@ export default function PostFeed() {
     return (
         <div className="space-y-4">
             {posts.map((post) => (
-                <PostCard
+                <Link
                     key={post.id}
-                    id={post.id}
-                    content={post.content}
-                    createdAt={post.createdAt}
-                    author={post.author}
-                    initialLikeCount={post.likeCount}
-                    initialBookmarkCount={post.bookmarkCount}
-                    initialLiked={post.isLiked}
-                    initialBookmarked={post.isBookmarked}
-                />
+                    href={`/posts/${post.id}`}
+                    className="block hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors rounded-lg"
+                >
+                    <PostCard
+                        id={post.id}
+                        content={post.content}
+                        createdAt={post.createdAt}
+                        author={post.author}
+                        initialLikeCount={post.likeCount}
+                        initialBookmarkCount={post.bookmarkCount}
+                        initialLiked={post.isLiked}
+                        initialBookmarked={post.isBookmarked}
+                        commentCount={post.commentCount}
+                    />
+                </Link>
             ))}
         </div>
     );
