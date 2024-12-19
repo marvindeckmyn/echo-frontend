@@ -21,6 +21,7 @@ model User {
     likes           Like[]
     bookmarks       Bookmark[]
     comments        Comment[]
+    commentLikes    CommentLike[]
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
 
@@ -106,12 +107,25 @@ model Comment {
     updatedAt       DateTime    @updatedAt
 
     // Relations
-    post            Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
-    user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-    parent          Comment?    @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    replies         Comment[]   @relation("CommentReplies")
+    post            Post            @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parent          Comment?        @relation("CommentReplies", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    replies         Comment[]       @relation("CommentReplies")
+    likes           CommentLike[]   @relation("CommentLikes") 
 
     @@index([postId])
     @@index([userId])
     @@index([parentId])
+}
+
+model CommentLike {
+    id              String          @id @default(cuid())
+    commentId       String
+    userId          String
+    createdAt       DateTime        @default(now())
+    comment         Comment         @relation("CommentLikes", fields: [commentId], references: [id], onDelete: Cascade)
+    user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([commentId, userId])
+    @@index([userId])
 }
