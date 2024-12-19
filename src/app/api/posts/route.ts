@@ -30,20 +30,24 @@ export async function GET(request: Request) {
                         comments: true,
                     }
                 },
-                likes: userId ? {
-                    where: { userId }
-                } : false,
-                bookmarks: userId ? {
-                    where: { userId }
-                } : false,
+                ...(userId ? {
+                    likes: {
+                        where: { userId },
+                        select: { userId: true }
+                    },
+                    bookmarks: {
+                        where: { userId },
+                        select: { userId: true }
+                    }
+                } : {})
             },
             take: 20
         });
 
         const transformedPosts = posts.map(post => ({
             ...post,
-            isLiked: post.likes.length > 0,
-            isBookmarked: post.bookmarks.length > 0,
+            isLiked: !!post.likes?.length,
+            isBookmarked: !!post.bookmarks?.length,
             likeCount: post._count.likes,
             bookmarkCount: post._count.bookmarks,
             commentCount: post._count.comments,
