@@ -5,25 +5,57 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Heart, MessageCircle } from 'lucide-react';
 import { type Comment } from '../../../types';
+import { useRouter } from 'next/navigation';
 
 interface CommentCardProps {
     comment: Comment;
     onReply?: (commentId: string) => void;
     isReply?: boolean;
+    postId: string;
 }
 
-export default function CommentCard({ comment, onReply, isReply = false }: CommentCardProps) {
+export default function CommentCard({ comment, onReply, isReply = false, postId }: CommentCardProps) {
     const { data: session } = useSession();
-    const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
+    const router = useRouter();
+    const [isLiked, setIsLiked] = useState(
+        comment.likes?.some(like => like.userId === session?.user?.id) ?? false
+    );
+    const [likeCount, setLikeCount] = useState(comment._count?.likes ?? 0);
     const [showReplyInput, setShowReplyInput] = useState(false);
 
     const handleLike = async () => {
-        // To be implemented with like system
-        console.log('Like functionality coming soon');
+        if (!session) {
+            router.push('/login');
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/api/posts/${postId}/comments/${comment.id}/like`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (!response.ok) throw new Error('Failed to like comment');
+
+            const data = await response.json();
+            setIsLiked(data.liked);
+            setLikeCount(prev => data.liked ? prev + 1 : prev - 1);
+        } catch (error) {
+            console.error('Error liking comment:', error);
+        }
     };
 
     const handleReply = () => {
+        if (!session) {
+            router.push('/login');
+            return;
+        }
+        
         if (onReply) {
             onReply(comment.id);
         }
