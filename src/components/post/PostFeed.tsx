@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 import PostCard from './PostCard';
 import { Loader2 } from 'lucide-react';
 
@@ -60,23 +59,18 @@ export default function PostFeed() {
     return (
         <div className="space-y-4">
             {posts.map((post) => (
-                <Link
+                <PostCard
                     key={post.id}
-                    href={`/posts/${post.id}`}
-                    className="block hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors rounded-lg"
-                >
-                    <PostCard
-                        id={post.id}
-                        content={post.content}
-                        createdAt={post.createdAt}
-                        author={post.author}
-                        initialLikeCount={post.likeCount}
-                        initialBookmarkCount={post.bookmarkCount}
-                        initialLiked={post.isLiked}
-                        initialBookmarked={post.isBookmarked}
-                        commentCount={post.commentCount}
-                    />
-                </Link>
+                    id={post.id}
+                    content={post.content}
+                    createdAt={post.createdAt}
+                    author={post.author}
+                    initialLikeCount={post.likeCount}
+                    initialBookmarkCount={post.bookmarkCount}
+                    initialLiked={post.isLiked}
+                    initialBookmarked={post.isBookmarked}
+                    commentCount={post.commentCount}
+                />
             ))}
         </div>
     );
