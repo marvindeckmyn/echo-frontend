@@ -30,14 +30,29 @@ export async function GET(
                         image: true,
                     }
                 },
+                likes: session?.user?.email ? {
+                    where: {
+                        user: {
+                            email: session.user.email
+                        }
+                    },
+                    select: {
+                        userId: true
+                    }
+                } : false,
                 _count: {
                     select: {
                         replies: true,
+                        likes: true,
                     }
                 }
             },
             orderBy: [
-                // Add likes count for comments later
+                {
+                    likes: {
+                        _count: 'desc'
+                    }
+                },
                 { createdAt: 'desc' }
             ],
             skip: (page - 1) * COMMENTS_PER_PAGE,
@@ -132,6 +147,15 @@ export async function POST(
                 _count: {
                     select: {
                         replies: true,
+                        likes: true,
+                    }
+                },
+                likes: {
+                    where: {
+                        userId: user.id
+                    },
+                    select: {
+                        userId: true
                     }
                 }
             }
