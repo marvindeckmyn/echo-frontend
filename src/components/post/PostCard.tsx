@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Heart, Bookmark, MessageCircle, Repeat2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface Author {
     name: string | null;
@@ -35,6 +36,7 @@ export default function PostCard({
     commentCount = 0
 }: PostProps) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isLiked, setIsLiked] = useState(initialLiked);
     const [likeCount, setLikeCount] = useState(initialLikeCount);
     const [isBookmarked, setIsBookmarked] = useState(initialBookmarked);
@@ -94,6 +96,11 @@ export default function PostCard({
         }
     };
 
+    const handleCommentClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        router.push(`/posts/${id}#comment`);
+    }
+
     return (
         <div className="bg-background rounded-lg shadow p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
             <div className="flex space-x-3">
@@ -128,7 +135,7 @@ export default function PostCard({
                     <div className="mt-3 flex items-center space-x-8">
                     <button 
                         className="text-gray-500 hover:text-blue-500 transition-colors flex items-center space-x-2"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={handleCommentClick}
                     >
                             <MessageCircle className="w-5 h-5"/>
                             <span>{commentCount}</span>
