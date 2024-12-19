@@ -20,6 +20,7 @@ interface PostProps {
     initialBookmarkCount?: number;
     initialLiked?: boolean;
     initialBookmarked?: boolean;
+    commentCount?: number;
 }
 
 export default function PostCard({ 
@@ -30,7 +31,8 @@ export default function PostCard({
     initialLikeCount = 0,
     initialBookmarkCount = 0,
     initialLiked = false,
-    initialBookmarked = false
+    initialBookmarked = false,
+    commentCount = 0
 }: PostProps) {
     const { data: session } = useSession();
     const [isLiked, setIsLiked] = useState(initialLiked);
@@ -124,9 +126,12 @@ export default function PostCard({
                     </div>
                     <p className="mt-1 text-foreground whitespace-pre-wrap">{content}</p>
                     <div className="mt-3 flex items-center space-x-8">
-                    <button className="text-gray-500 hover:text-blue-500 transition-colors flex items-center space-x-2">
+                    <button 
+                        className="text-gray-500 hover:text-blue-500 transition-colors flex items-center space-x-2"
+                        onClick={(e) => e.preventDefault()}
+                    >
                             <MessageCircle className="w-5 h-5"/>
-                            <span>0</span>
+                            <span>{commentCount}</span>
                         </button>
                         <button
                             onClick={handleLike}
