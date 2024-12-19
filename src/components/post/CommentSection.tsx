@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import CommentCard from './CommentCard';
-import { type Comment } from '@/types';
+import { type Comment } from '../../../types';
 
 interface CommentSectionProps {
     postId: string;

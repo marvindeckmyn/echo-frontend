@@ -55,7 +55,18 @@ export interface Comment {
     user: User;
     parent?: Comment | null;
     replies?: Comment[];
+    likes: CommentLike[];
     _count?: {
         replies: number;
+        likes: number;
     }
+}
+
+export interface CommentLike {
+    id: string;
+    commentId: string;
+    userId: string;
+    createdAt: Date;
+    comment: Comment;
+    user: User;
 }

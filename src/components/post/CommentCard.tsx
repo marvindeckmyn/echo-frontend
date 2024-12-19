@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Heart, MessageCircle } from 'lucide-react';
-import { type Comment } from '@/types';
+import { type Comment } from '../../../types';
 
 interface CommentCardProps {
     comment: Comment;
